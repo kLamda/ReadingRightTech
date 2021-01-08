@@ -5,17 +5,38 @@
         <title>View List</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <style>
+            .cardButtons{
+                background: transparent;
+                box-shadow: 0px 0px 0px transparent;
+                border: 0px solid transparent;
+                text-shadow: 0px 0px 0px transparent;
+                color: black;
+                padding: 0;
+                margin-right : 20%;
+        </style>
     </head>
     <body>
-        <nav class="mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item active">
+                    <a href="{% url 'shopping:index' %}" class="nav-link">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'shopping:add' %}" class="nav-link">Add Items</a>
+                  </li>
+                </ul>
+              </div>
             {% if user.is_authenticated %}
-                <form action="{% url 'accounts:logout' %}" method="post">
+                <form action="{% url 'accounts:logout' %}" method="post" class="form-inline my-2 my-lg-0">
                     {% csrf_token %}
-                    <button class="btn btn-primary btn-sm" type="submit">Log Out</button>
+                    <input class="cardButtons" type="submit" value="Logout">
                 </form>
             {% endif %}
-            <a href="{% url 'shopping:add' %}">Add Items</a>
-            <a href="{% url 'shopping:index' %}">Home</a>
         </nav>
         <div class="container mt-5">
             <!-- top -->
@@ -44,29 +65,9 @@
             <div class="row mt-4">
                 <!--- -->
                 <!-- Loop This -->
-<!--                <div class="col-lg-4">-->
-<!--                    <div class="card">-->
-<!--                        <div class="card-body">-->
-<!--                          <h5 class="card-title">Tomato</h5>-->
-<!--                          <h6 class="card-subtitle mb-2 text-muted">2 Pcs.</h6>-->
-<!--                          <p class="text-success">BOUGHT</p>-->
-<!--                        </div>-->
-<!--                      </div>-->
-<!--                </div>-->
-<!--                &lt;!&ndash; // Loop &ndash;&gt;-->
-<!--                <div class="col-lg-4">-->
-<!--                    <div class="card">-->
-<!--                        <div class="card-body">-->
-<!--                          <h5 class="card-title">Chicken</h5>-->
-<!--                          <h6 class="card-subtitle mb-2 text-muted">2Kgs</h6>-->
-<!--                          <p class="text-danger">NOT AVAILABLE</p>-->
-<!--                        </div>-->
-<!--                      </div>-->
-<!--                </div>-->
-
                 {% for item in data %}
                 <div class="col-lg-4">
-                    <div class="card">
+                    <div class="card" style="margin-bottom : 20px;">
                         <div class="card-body">
                           <h5 class="card-title">{{item.itemName}}</h5>
                           <h6 class="card-subtitle mb-2 text-muted">{{item.quantity}} Kgs</h6>
@@ -79,6 +80,8 @@
                             {% if item.not_available %}
                             <p class="text-danger">NOT AVAILABLE</p>
                             {% endif %}
+                            <h6 class="card-subtitle mb-2 text-muted">Date : {{item.date}}</h6>
+                            <br>
                             <form action="{% url 'shopping:update' %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="uniqueID" value="{{item.uniqueID}}">
@@ -87,25 +90,17 @@
                                 <input type="hidden" name="itemQuantity" value="{{item.quantity}}">
                                 <input type="hidden" name="itemStatus" value="{{item.status}}">
                                 <input type="hidden" name="itemDate" value="{{item.date}}">
-                                <input type="submit" name="submit_item" value="Update">
-                                <input type="submit" name="submit_item" value="Delete">
+                                <button type="submit" name="submit_item" class="cardButtons" value="Update">Update</button>
+                                <button type="submit" name="submit_item" class="cardButtons" value="Delete">Delete</button>
                             </form>
                         </div>
                       </div>
                 </div>
                 {% endfor %}
-
-<!--                <div class="col-lg-4">-->
-<!--                    <div class="card">-->
-<!--                        <div class="card-body">-->
-<!--                          <h5 class="card-title">Posto</h5>-->
-<!--                          <h6 class="card-subtitle mb-2 text-muted">50gms</h6>-->
-<!--                          <p class="text-info">PENDING</p>-->
-<!--                        </div>-->
-<!--                      </div>-->
-<!--                </div>-->
-
             </div>
         </div>
     </body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </html>

@@ -15,15 +15,15 @@ def view_list(request):
                                  "pending": True if objects.status == "0" else False,
                                  "bought": True if objects.status == "1" else False,
                                  "not_available": True if objects.status == "2" else False, "uniqueID": objects.id})
-            # print(data)
             return render(request, 'shopping/index.html', context={"data": data})
         data = []
         for objects in ShoppingItem.objects.all().filter(userID=request.user.id):
-            # print(objects)
-            data.append({"itemName" : objects.itemName,"quantity": objects.quantityItem,"date": objects.date, "status": objects.status,
+            print(objects.date)
+            date_item = objects.date
+            data.append({"itemName" : objects.itemName,"quantity": objects.quantityItem,"date": date_item, "status": objects.status,
                              "pending" : True if objects.status=="0" else False, "bought" : True if objects.status == "1" else False,
                              "not_available" : True if objects.status=="2" else False, "uniqueID": objects.id})
-        # print(data)
+        print(data)
         return render(request, 'shopping/index.html', context={"data" : data})
     else:
         return redirect('accounts:login')

@@ -2,10 +2,45 @@
 {% load static %}
  
 {% block content %}
-    <h1>Signup</h1>
-    <form action="{% url 'accounts:signup' %}" method="post">
-        {% csrf_token %}
-        {{form}}
-        <input type="submit" value="Signup">
-    </form>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+    <div class="container">
+      <div class="card login-card">
+        <div class="row no-gutters">
+          <div class="col-md-7">
+            <div class="card-body">
+              <p class="login-card-description">Sign Up to your account</p>
+              <form action="{% url 'accounts:signup' %}" method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label>Email</label>
+                      <br>
+<!--                    <input type="email" name="email" id="email" class="form-control" placeholder="Email address">-->
+                      {{form.username}}
+                  </div>
+                  <div class="form-group mb-4">
+                    <label>Password</label>
+                      <br>
+<!--                    <input type="password" name="password" id="password" class="form-control" placeholder="***********">-->
+                      {{form.password1}}
+                  </div>
+                  <div class="form-group mb-4">
+                    <label>Confirm Password</label>
+                      <br>
+<!--                    <input type="password" name="password" id="password" class="form-control" placeholder="***********">-->
+                      {{form.password2}}
+                  </div>
+                  <input name="signup" id="signup" class="btn btn-block login-btn mb-4" type="submit" value="Sign Up">
+                </form>
+                <p class="login-card-footer-text">Already have an account? <br>
+                    <a href="{% url 'accounts:login' %}" class="text-reset">Sign In here</a></p>
+            </div>
+          </div>
+            <div class="col-md-5">
+            <img src="{% static 'images/login.jpg' %}" alt="login" class="login-card-img">
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
 {% endblock content %}
