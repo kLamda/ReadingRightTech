@@ -1,0 +1,111 @@
+{% load static %}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>View List</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body>
+        <nav class="mb-3">
+            {% if user.is_authenticated %}
+                <form action="{% url 'accounts:logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary btn-sm" type="submit">Log Out</button>
+                </form>
+            {% endif %}
+            <a href="{% url 'shopping:add' %}">Add Items</a>
+            <a href="{% url 'shopping:index' %}">Home</a>
+        </nav>
+        <div class="container mt-5">
+            <!-- top -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1>View Grocery List</h1>
+                </div>
+                <div class="col-lg-6 float-right">
+                    <div class="row">
+                        <form action="{% url 'shopping:index' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="date_filter" value="dateFilter">
+                            <div class="col-lg-8">
+                                <!-- Date Filtering-->
+                                <input type="date" class="form-control" name="date">
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="submit" class="btn btn-danger" value="filter">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- // top -->
+            <!-- Grocery Cards -->
+            <div class="row mt-4">
+                <!--- -->
+                <!-- Loop This -->
+<!--                <div class="col-lg-4">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-body">-->
+<!--                          <h5 class="card-title">Tomato</h5>-->
+<!--                          <h6 class="card-subtitle mb-2 text-muted">2 Pcs.</h6>-->
+<!--                          <p class="text-success">BOUGHT</p>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; // Loop &ndash;&gt;-->
+<!--                <div class="col-lg-4">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-body">-->
+<!--                          <h5 class="card-title">Chicken</h5>-->
+<!--                          <h6 class="card-subtitle mb-2 text-muted">2Kgs</h6>-->
+<!--                          <p class="text-danger">NOT AVAILABLE</p>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                </div>-->
+
+                {% for item in data %}
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">{{item.itemName}}</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">{{item.quantity}} Kgs</h6>
+                            {% if item.pending %}
+                            <p class="text-info">PENDING</p>
+                            {% endif %}
+                            {% if item.bought %}
+                            <p class="text-success">BOUGHT</p>
+                            {% endif %}
+                            {% if item.not_available %}
+                            <p class="text-danger">NOT AVAILABLE</p>
+                            {% endif %}
+                            <form action="{% url 'shopping:update' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="uniqueID" value="{{item.uniqueID}}">
+                                <input type="hidden" name="location" value="index">
+                                <input type="hidden" name="itemName" value="{{item.itemName}}">
+                                <input type="hidden" name="itemQuantity" value="{{item.quantity}}">
+                                <input type="hidden" name="itemStatus" value="{{item.status}}">
+                                <input type="hidden" name="itemDate" value="{{item.date}}">
+                                <input type="submit" name="submit_item" value="Update">
+                                <input type="submit" name="submit_item" value="Delete">
+                            </form>
+                        </div>
+                      </div>
+                </div>
+                {% endfor %}
+
+<!--                <div class="col-lg-4">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-body">-->
+<!--                          <h5 class="card-title">Posto</h5>-->
+<!--                          <h6 class="card-subtitle mb-2 text-muted">50gms</h6>-->
+<!--                          <p class="text-info">PENDING</p>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                </div>-->
+
+            </div>
+        </div>
+    </body>
+</html>
