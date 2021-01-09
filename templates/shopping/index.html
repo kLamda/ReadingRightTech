@@ -62,10 +62,13 @@
             </div>
             <!-- // top -->
             <!-- Grocery Cards -->
-            <div class="row mt-4">
+
                 <!--- -->
                 <!-- Loop This -->
-                {% for item in data %}
+                {% for a in data %}
+                Date : {{a.0}}
+                <div class="row mt-4">
+                {% for item in a.1 %}
                 <div class="col-lg-4">
                     <div class="card" style="margin-bottom : 20px;">
                         <div class="card-body">
@@ -80,7 +83,6 @@
                             {% if item.not_available %}
                             <p class="text-danger">NOT AVAILABLE</p>
                             {% endif %}
-                            <h6 class="card-subtitle mb-2 text-muted">Date : {{item.date}}</h6>
                             <br>
                             <form action="{% url 'shopping:update' %}" method="POST">
                                 {% csrf_token %}
@@ -88,7 +90,7 @@
                                 <input type="hidden" name="location" value="index">
                                 <input type="hidden" name="itemName" value="{{item.itemName}}">
                                 <input type="hidden" name="itemQuantity" value="{{item.quantity}}">
-                                <input type="hidden" name="itemStatus" value="{{item.status}}">
+                                <input type="hidden" name="itemStatus" value={{item.status}}>
                                 <input type="hidden" name="itemDate" value="{{item.date}}">
                                 <button type="submit" name="submit_item" class="cardButtons" value="Update">Update</button>
                                 <button type="submit" name="submit_item" class="cardButtons" value="Delete">Delete</button>
@@ -97,7 +99,9 @@
                       </div>
                 </div>
                 {% endfor %}
-            </div>
+                    </div>
+                {% endfor %}
+
         </div>
     </body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

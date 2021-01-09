@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import ShoppingItem
 from django.contrib.auth import get_user_model
+from itertools import groupby
 import uuid
 # Create your views here.
+def key_func(k):
+    return k['date']
 def view_list(request):
     if request.user.id != None:
         if request.method == "POST":
@@ -15,18 +18,35 @@ def view_list(request):
                                  "pending": True if objects.status == "0" else False,
                                  "bought": True if objects.status == "1" else False,
                                  "not_available": True if objects.status == "2" else False, "uniqueID": objects.id})
-            return render(request, 'shopping/index.html', context={"data": data})
+            INFO = sorted(data, key=key_func)
+            data_1 = []
+            for key, value in groupby(INFO, key_func):
+                print(key)
+                a = []
+                a.append(str(key))
+                a.append(list(value))
+                data_1.append(a)
+            print(data_1)
+            return render(request, 'shopping/index.html', context={"data": data_1})
         data = []
         for objects in ShoppingItem.objects.all().filter(userID=request.user.id):
-            print(objects.date)
             date_item = objects.date
-            data.append({"itemName" : objects.itemName,"quantity": objects.quantityItem,"date": date_item, "status": objects.status,
+            data.append({"itemName" : objects.itemName,"quantity": objects.quantityItem,"date": str(date_item), "status": objects.status,
                              "pending" : True if objects.status=="0" else False, "bought" : True if objects.status == "1" else False,
                              "not_available" : True if objects.status=="2" else False, "uniqueID": objects.id})
-        print(data)
-        return render(request, 'shopping/index.html', context={"data" : data})
-    else:
-        return redirect('accounts:login')
+        print("Raw Data : ",data)
+        INFO = sorted(data, key=key_func)
+        data_1 = []
+        for key, value in groupby(INFO, key_func):
+            print(key)
+            a = []
+            a.append(str(key))
+            a.append(list(value))
+            data_1.append(a)
+        print(data_1)
+        return render(request, 'shopping/index.html', context={"data" : data_1})
+    # else:
+    #     return redirect('accounts:login')
 
 def add_list(request):
     if request.user.id != None:
