@@ -21,12 +21,10 @@ def view_list(request):
             INFO = sorted(data, key=key_func)
             data_1 = []
             for key, value in groupby(INFO, key_func):
-                print(key)
                 a = []
                 a.append(str(key))
                 a.append(list(value))
                 data_1.append(a)
-            print(data_1)
             return render(request, 'shopping/index.html', context={"data": data_1})
         data = []
         for objects in ShoppingItem.objects.all().filter(userID=request.user.id):
@@ -34,19 +32,16 @@ def view_list(request):
             data.append({"itemName" : objects.itemName,"quantity": objects.quantityItem,"date": str(date_item), "status": objects.status,
                              "pending" : True if objects.status=="0" else False, "bought" : True if objects.status == "1" else False,
                              "not_available" : True if objects.status=="2" else False, "uniqueID": objects.id})
-        print("Raw Data : ",data)
         INFO = sorted(data, key=key_func)
         data_1 = []
         for key, value in groupby(INFO, key_func):
-            print(key)
             a = []
             a.append(str(key))
             a.append(list(value))
             data_1.append(a)
-        print(data_1)
         return render(request, 'shopping/index.html', context={"data" : data_1})
-    # else:
-    #     return redirect('accounts:login')
+    else:
+        return redirect('accounts:login')
 
 def add_list(request):
     if request.user.id != None:
@@ -59,7 +54,7 @@ def add_list(request):
             if len(name) == 0 or len(quantity) == 0 or len(date) == 0:
                 return render(request, 'shopping/add.html', context = {"error" : "Fill all the quantity of form"})
             ShoppingItem(id=uuid.uuid4(), userID= current_user,itemName = name, quantityItem = quantity, status = select_flag, date = date).save()
-            return redirect('shopping:add')
+            return redirect('shopping:index')
         return render(request, 'shopping/add.html')
     else:
         return redirect("accounts:login")
@@ -81,6 +76,7 @@ def update_list(request):
         elif request.POST['submit_item'] == "Update_list":
             # print(request.POST["uniqueID"])
             item = ShoppingItem.objects.all().get(userID=request.user.id, id=request.POST["uniqueID"])
+            item.itemName = request.POST['itemNameUpdate']
             item.quantityItem = int(request.POST['itemQuantityUpdate'])
             item.status = request.POST['itemStatusUpdate']
             item.date = request.POST['itemDateUpdate']

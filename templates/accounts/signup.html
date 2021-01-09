@@ -12,19 +12,23 @@
               <p class="login-card-description">Sign Up to your account</p>
               <form action="{% url 'accounts:signup' %}" method="post">
                   {% csrf_token %}
+                  {{ form.non_field_errors }}
                   <div class="form-group">
-                    <label>Email</label>
+                      {{form.username.errors}}
+                    <label>User Name</label>
                       <br>
 <!--                    <input type="email" name="email" id="email" class="form-control" placeholder="Email address">-->
                       {{form.username}}
                   </div>
                   <div class="form-group mb-4">
+                      {{ form.password1.errors }}
                     <label>Password</label>
                       <br>
 <!--                    <input type="password" name="password" id="password" class="form-control" placeholder="***********">-->
                       {{form.password1}}
                   </div>
                   <div class="form-group mb-4">
+                      {{ form.password2.errors }}
                     <label>Confirm Password</label>
                       <br>
 <!--                    <input type="password" name="password" id="password" class="form-control" placeholder="***********">-->
@@ -33,7 +37,7 @@
                   <input name="signup" id="signup" class="btn btn-block login-btn mb-4" type="submit" value="Sign Up">
                 </form>
                 <p class="login-card-footer-text">Already have an account? <br>
-                    <a href="{% url 'accounts:login' %}" class="text-reset">Sign In here</a></p>
+                    <a href="{% url 'accounts:login' %}" class="text-reset">LogIn here</a></p>
             </div>
           </div>
             <div class="col-md-5">
